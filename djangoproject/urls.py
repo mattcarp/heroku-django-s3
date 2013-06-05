@@ -9,10 +9,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # The sit'es landing page:
-    url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
-        'document_root': settings.STATIC_ROOT,
-    }),
-    url(r'^$', TemplateView.as_view(template_name='base.html')),
+    # url(r'^$', TemplateView.as_view(template_name='base.html')),
     # Examples:
     # url(r'^$', 'djangoproject.views.home', name='home'),
     # url(r'^djangoproject/', include('djangoproject.foo.urls')),
