@@ -1,5 +1,5 @@
 from common import *
 
-# Testing a heroku error:
 
+# For good measure:
 DEBUG = False
