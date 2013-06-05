@@ -1,0 +1,8 @@
+Django
+boto
+dj-database-url
+django-storages
+gunicorn
+psycopg2
+wsgiref
+south

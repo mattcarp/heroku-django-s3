@@ -1,0 +1,5 @@
+# After inheriting from common.txt, set dev-only dependencies
+-r common.txt
+coverage
+django-discover-runner
+django-debug-toolbar
