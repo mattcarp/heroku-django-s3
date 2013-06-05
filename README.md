@@ -29,7 +29,8 @@ This setup using the excellent virtualenvwrapper to isolate the installed depend
     cd [name-of-your-project]
     setvirtualenvproject
     ```
-2. Install all the dependencies (django, psycopg2, gunicorn, dj-database-url, boto, south and django-storages) with pip. These are specified in requirements.txt. If you leave versio numbers out of this file it will install the latest versions available.
+2. Install the development environment dependencies with pip. These are specified in requirements/dev.txt. Becuase requirements may differ slightly between environments (for instance you may want test coverage and a debug toolbar in your developmnet env but not in produciton), separate requirements files are placed in the requirements directory.  dev.txt and prod.txt inherit a common set of requirements from common.txt.  Heroku will see the requirements.txt file at the root level of the project, which inherits from requirements/prod.txt and will therefore install only production requirements.
+If you leave versio numbers out of this file it will install the latest versions available.
 
     ```sh
     pip install -r requirements.txt

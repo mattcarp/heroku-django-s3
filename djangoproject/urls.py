@@ -1,10 +1,14 @@
 from django.conf.urls import patterns, include, url
+from django.views.generic import TemplateView
+
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    # The sit'es landing page:
+    url(r'^$', TemplateView.as_view(template_name='base.html')),
     # Examples:
     # url(r'^$', 'djangoproject.views.home', name='home'),
     # url(r'^djangoproject/', include('djangoproject.foo.urls')),
