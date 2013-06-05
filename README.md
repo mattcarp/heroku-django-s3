@@ -95,6 +95,7 @@ Everything should now work for **local development**.  Check that we can see the
     heroku config:add AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
     heroku config:add DJ_SECRET_KEY=$DJ_SECRET_KEY
     heroku config:add DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
+    heroku config:add DJANGO_SETTINGS_MODULE=False
     ```
 
     You can turn debug on/off by changing the DJ_DEBUG setting (only do this if something has gone wrong. *Note: static files aren't served from S3 in debug mode*):
