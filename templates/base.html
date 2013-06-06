@@ -1,251 +1,109 @@
 {% load staticfiles %}
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
+  <head>
+    <meta charset="utf-8">
+    <title>Django Heroku S3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-  <meta name="viewport" content="width=device-width" />
+    <!-- styles -->
+    <link href="{% static "css/simplex.bootstrap.min.css" %}" rel="stylesheet">
+    <link href="{% static "css/project.css" %}" rel="stylesheet">
+    {% block extra_css %}{% endblock extra_css %}
 
-  <title>Default | Project</title>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
 
-  <!-- Included CSS Files -->
-  <link href="{% static "css/foundation.min.css" %}" rel="stylesheet">
-{#   <link href="{% static "css/project.css" %}" rel="stylesheet"> #}
-
-  {% block extra_css %}{% endblock extra_css %}
-</head>
+  </head>
 
 <body>
-
+<a href="https://github.com/mattcarp/heroku-django-s3"><img style="margin-top: 40px; position: absolute; top: 60; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png" alt="Fork me on GitHub"></a>
 {% block header %}
    <!-- Header and Nav -->
-  <nav class="top-bar">
-    <ul class="title-area">
-      <!-- Title Area -->
-      <li class="name">
-        <h1>
-          <a href="#">
-            Django S3 Heroku
-          </a>
-        </h1>
-      </li>
-      <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
-    </ul>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Django Heroku S3</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li class="divider"></li>
+                  <li class="nav-header">Nav header</li>
+                  <li><a href="#">Separated link</a></li>
+                  <li><a href="#">One more separated link</a></li>
+                </ul>
+              </li>
+            </ul>
 
-    <section class="top-bar-section">
-      <!-- Left Nav Section -->
-      <ul class="left">
-        <li class="divider"></li>
-        <li class="has-dropdown">
-          <a class="active" href="#">Main Item 1</a>
-          <ul class="dropdown">
-            <li><label>Section Name</label></li>
-            <li><a href="#" class="">Dropdown Level 1</a></li>
-            <li><a href="#">Dropdown Option</a></li>
-            <li><a href="#">Dropdown Option</a></li>
-            <li class="divider"></li>
-            <li><label>Section Name</label></li>
-            <li><a href="#">Dropdown Option</a></li>
-            <li><a href="#">Dropdown Option</a></li>
-            <li><a href="#">Dropdown Option</a></li>
-            <li class="divider"></li>
-            <li><a href="#">See all &rarr;</a></li>
-          </ul>
-        </li>
-        <li class="divider"></li>
-        <li><a href="#">Main Item 2</a></li>
-        <li class="divider"></li>
-        <li class="has-dropdown">
-          <a href="#">Main Item 3</a>
-          <ul class="dropdown">
-            <li><a href="#">Dropdown Option</a></li>
-            <li><a href="#">Dropdown Option</a></li>
-            <li><a href="#">Dropdown Option</a></li>
-            <li class="divider"></li>
-            <li><a href="#">See all &rarr;</a></li>
-          </ul>
-        </li>
-       
-      </ul>
-
-      <!-- Right Nav Section -->
-      <ul class="right">
-        <li class="divider"></li>
-        <li class="has-dropdown">
-          <a href="#">Main Item 4</a>
-          <ul class="dropdown">
-            <li><label>Section Name</label></li>
-            <li class="has-dropdown">
-              <a href="#" class="">Has Dropdown, Level 1</a>
-              <ul class="dropdown">
-                <li><a href="#">Dropdown Options</a></li>
-                <li><a href="#">Dropdown Options</a></li>
-                <li class="has-dropdown">
-                  <a href="#">Has Dropdown, Level 2</a>
-                  <ul class="dropdown test">
-                    <li><a href="#">Subdropdown Option</a></li>
-                    <li><a href="#">Subdropdown Option</a></li>
-                    <li><a href="#">Subdropdown Option</a></li>
-                  </ul>
-                </li>
-                <li><a href="#">Subdropdown Option</a></li>
-                <li><a href="#">Subdropdown Option</a></li>
-                <li><a href="#">Subdropdown Option</a></li>
-              </ul>
-            </li>
-            <li><a href="#">Dropdown Option</a></li>
-            <li><a href="#">Dropdown Option</a></li>
-            <li class="divider"></li>
-            <li><label>Section Name</label></li>
-            <li><a href="#">Dropdown Option</a></li>
-            <li><a href="#">Dropdown Option</a></li>
-            <li><a href="#">Dropdown Option</a></li>
-            <li class="divider"></li>
-            <li><a href="#">See all &rarr;</a></li>
-          </ul>
-        </li>
-        <li class="divider"></li>
-        <li><a href="#">Main Item 5</a></li>
-        <li class="divider"></li>
-        <li class="has-dropdown">
-          <a href="#">Main Item 6</a>
-          <ul class="dropdown">
-            <li><a href="#">Dropdown Option</a></li>
-            <li><a href="#">Dropdown Option</a></li>
-            <li><a href="#">Dropdown Option</a></li>
-            <li class="divider"></li>
-            <li><a href="#">See all &rarr;</a></li>
-          </ul>
-        </li>
-      </ul>
-    </section>
-  </nav>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
   <!-- End Header and Nav -->
 {% endblock header %}
  
 {% block content %}
-<a href="https://github.com/mattcarp/heroku-django-s3"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png" alt="Fork me on GitHub"></a>
-  <!-- Main Grid Section -->
 
-  <div class="row">
+  <div class="container">
 
-    <div class="large-9 columns">
-      <div class="panel">
-        <h5>Django-S3-Heroku</h5>
-        <p>This base layout can be extended in your application templates.  Pull requests welcomed.  Read the <a href="https://github.com/mattcarp/heroku-django-s3/blob/master/README.md">README</a>.</p>
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit dj-hero">
+        <h1>Django S3 Heroku!</h1>
+        <p>This is a template project for Django 1.5.x, which can be deployed to Heroku.  It makes use of an Amazon S3 bucket to </p>
+        <p><a href="https://github.com/mattcarp/heroku-django-s3" class="btn btn-primary btn-large">View the README &raquo;</a></p>
       </div>
-    </div>
-    <div class="large-3  columns">
-      <div class="panel">
-        <h5>Panel Title</h5>
-        <p>This template uses the Zurb Foundation framework.  It's easy to substitute other by changing the css and js references in the static template tags.</p>
+
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="span4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn" href="#">View details &raquo;</a></p>
+        </div>
+        <div class="span4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn" href="#">View details &raquo;</a></p>
+       </div>
+        <div class="span4">
+          <h2>Heading</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p><a class="btn" href="#">View details &raquo;</a></p>
+        </div>
       </div>
-    </div>
+      <hr>
 
-  </div>
-
-
-
-  <div class="row">
-
-    <div class="large-6 columns">
-      <div class="panel">
-        <h5>Panel Title</h5>
-        <p>This is a six columns grid panel with an arbitrary height. Bacon ipsum dolor sit amet salami ham hock biltong ball tip drumstick sirloin pancetta meatball short loin.</p>
-      </div>
-    </div>
-    <div class="large-2 columns">
-      <div class="panel">
-        <p>
-          <img src="http://placehold.it/200x200" />
-        </p>
-      </div>
-    </div>
-    <div class="large-4 columns">
-      <div class="panel">
-        <h5>Panel Title</h5>
-        <p>This is a four columns grid panel with an arbitrary height. Bacon ipsum dolor sit amet salami.</p>
-      </div>
-    </div>
-
-  </div>
-
-
-  <div class="row">
-
-    <div class="large-4 columns">
-      <div class="panel">
-        <p>
-          <img src="http://placehold.it/400x300" />
-        </p>
-      </div>
-    </div>
-    <div class="large-4 columns">
-      <div class="panel">
-        <p>
-          <img src="http://placehold.it/400x300" />
-        </p>
-      </div>
-    </div>
-    <div class="large-4 columns">
-      <div class="panel">
-        <p>
-          <img src="http://placehold.it/400x300" />
-        </p>
-      </div>
-    </div>
-
-  </div>
-
-
-  <div class="row">
-
-    <div class="large-6 columns">
-      <div class="panel">
-        <h5>Panel Title</h5>
-        <p>This is a six columns grid panel with an arbitrary height. Bacon ipsum dolor sit amet salami ham hock biltong ball tip drumstick sirloin pancetta meatball short loin.</p>
-      </div>
-    </div>
-    <div class="large-3 columns">
-      <div class="panel">
-        <h5>Panel Title</h5>
-        <p>This is a three columns grid panel with an arbitrary height.</p>
-      </div>
-    </div>
-    <div class="large-3 columns">
-      <div class="panel">
-        <h5>Panel Title</h5>
-        <p>This is a three columns grid panel with an arbitrary height.</p>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- End Grid Section -->
 {% endblock content %}
 
 
 {% block footer %}
-    <footer class="row">
-    <div class="large-12 columns">
-      <hr />
-      <div class="row">
-        <div class="large-6 columns">
+  <footer>
           <p>&copy; Copyright no one at all. Go to town.</p>
-        </div>
-
-      </div>
-    </div>
   </footer>
 {% endblock footer %}
-<script src="{% static "js/foundation.min.js" %}"></script>
-<script>
-  document.write('<script src={% static "js/vendor/jquery.js" %}' + '<\/script>')
-  </script>
-    <script>
-    $(document).foundation();
-  </script>
+
+</div> <!-- /container -->
+
+<!-- javascript -->
+<script src="{% static "js/jquery.min.js" %}"></script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>
 {% block extra_js %}{% endblock extra_js %}
 
 </body>

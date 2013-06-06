@@ -1,4 +1,4 @@
-Django Skeleton Project
+Django Heroku Project
 ================
 
 ####*A clean project of a Django web-framework running on Heroku with static files served from Amazon S3, attempting to follow the [12-factor](http://www.12factor.net/) design pattern.*
@@ -94,11 +94,15 @@ Everything should now work for **local development**.  Check that we can see the
     heroku config:add AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
     heroku config:add AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
     heroku config:add DJ_SECRET_KEY=$DJ_SECRET_KEY
-    heroku config:add DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
-    heroku config:add DJANGO_SETTINGS_MODULE=False
+    heroku config:add DJ_DEBUG=False
+    ```
+    Set the Django setting variable to pick up the prod.py settings file:
+
+    ```sh
+    heroku config:add DJANGO_SETTINGS_MODULE=settings.prod
     ```
 
-    You can turn debug on/off by changing the DJ_DEBUG setting (only do this if something has gone wrong. *Note: static files aren't served from S3 in debug mode*):
+    You can turn debug on/off by changing the DJ_DEBUG setting (only do this if something has gone wrong:
 
     ```sh
     heroku config:add DJ_DEBUG=True
@@ -132,69 +136,67 @@ Everything should now work for **local development**.  Check that we can see the
  - [dj-database-url](https://github.com/kennethreitz/dj-database-url) (to use a URL environmental variable to reference the location of the database)
  - [django-storages](http://django-storages.readthedocs.org/en/latest/backends/amazon-S3.html) (custom storage backends for django, best S3 support makes use of 'boto'...)
  - Boto (Python interface to Amazon Web Services, simplifies the AWS connection to just the access keys)
+ - south (for migrations)
 
 ####Changes Made
 
+Requirements are split into common.txt, dev.txt, test.txt, and prod.txt.  The `common` file is imported from the other three.  These are all in the top-level `requirements` directory.  This allows the use of modules in dev and test that you wouldn't want to have installed in prod (such as test runners and code coverage tools).  The top level requirements.txt file just inherits from `settings/prod.txt`, so that Heroku can grab the right file.
+
+####Base template
+Added a base layout that can be extended by app templates.  The base imports css and js from twitter bootstrap v3.0.0-wip.  Note that this is a beta version of bootstrap: you'll want to update it.
+
 ####`settings.py`
 
->Removed `# 'django.contrib.sites'` add-on that can enable multiple sites to use the same back->end but confuses matters here.
->
->As part of the plan to make the settings.py file to be transferable and secure did the >following:
->
->Make `DEBUG` an environmental variable by putting the following at the top of settings.py:
->
->```python
->import os 
->
-># Added to help use env variables
->def env_var(key, default=None):
->    """Retrieves env vars and makes Python boolean replacements"""
->    val = os.environ.get(key, default)
->    if val == 'True':
->        val = True
->    elif val == 'False':
->        val = False
->    return val
->
->DEBUG = env_var('DJ_DEBUG', False) #Unless env var is set to True, debug is off
->```
->
->`SECRET_KEY` stored as as `os.environ['DJ_SECRET_KEY']` environmental variable.
->```
->
->`ALLOWED_HOSTS` accepting any `['.herokuapp.com']` subdomain. Only these domains can host the >site when `DEBUG = False`. User should **remember to change this to be most specific**
->
->Database settings are set by env var:
->    
->```python   
-># Parse database configuration from $DATABASE_URL
->import dj_database_url
->DATABASES['default'] =  dj_database_url.config(default=os.environ.get('DATABASE_URL'))
->
-># Honor the 'X-Forwarded-Proto' header for request.is_secure()
->SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
->```
->
->`'admin'` and `'admindocs'` enabled  and `'storages'` to `INSTALLED_APPS`
->
->Added settings to store statics on S3
->    
->```python
->#Storage on S3 settings are stored as os.environs to keep settings.py clean 
->if not DEBUG:
->    AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
->    AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
->    AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
->    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
->    S3_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
->    STATIC_URL = S3_URL
->```
+Split settings into common.py, dev.py, test.py, and prod.py.  As with requirements, the `common` file is imported into the other files.  This is done so that you can have installed apps in, say, your test environment, which you don't want in production.You can set the `DJANGO_SETTINGS_MODULE` env variable to pick up the appropriate file for your environment (see above).
+
+Removed `# 'django.contrib.sites'` add-on that can enable multiple sites to use the same back-end but confuses matters here.
+
+As part of the plan to make the settings transferable and secure did the following:
+
+```python
+# Helper function to grab env vars, report a useful message if not found:
+
+def get_env_setting(setting):
+    """ Get the environment setting or return exception """
+    try:
+        return environ[setting]
+    except KeyError:
+        error_msg = "Set the %s env variable" % setting
+        raise ImproperlyConfigured(error_msg)
+
+Various env vars are used to allow portability between environments and projects.
+
+Database settings are set by env var:
+    
+```python   
+# Parse database configuration from $DATABASE_URL
+import dj_database_url
+DATABASES['default'] =  dj_database_url.config(default=get_env_setting('DATABASE_URL'))
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+```
+
+`'admin'` and `'admindocs'` enabled.  `'storages', 'south'` added to `INSTALLED_APPS`
+
+Added settings to store statics on S3
+    
+```python
+#Storage on S3 settings are stored as os.environs to keep settings.py clean 
+if not DEBUG:
+    AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
+    AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+    AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+    S3_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+    STATIC_URL = S3_URL
+```
 
 ####`urls.py`
->Uncommented lines 4, 5, 13 and 16 from urls to enable admin urls
+Uncommented lines 4, 5, 13 and 16 from urls to enable admin urls
 
 ####`Procfile`
-> Runs gunicorn process for heroku
+Runs gunicorn process for heroku
 
 ####`.gitignore`
-> Ignores common ignorables for python and django development
+Ignores common ignorables for python and django development
